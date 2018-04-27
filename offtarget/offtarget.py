@@ -86,6 +86,8 @@ def parse_args():
     parser.add_argument(
         '--log', metavar='FILE', type=str, default=DEFAULT_LOG_FILE,
         help='Log progress in FILENAME.')
+    parser.add_argument(
+        '--dir', type=str, required=False, help='Directory for writing offtarget output plots to, defaults to current directory')
     return parser.parse_args()
 
 BASE_PAIRS = {'A': 'T', 'G': 'C', 'C': 'G', 'T': 'A'}
@@ -270,7 +272,11 @@ def plot_counts(args, title, extension, counts):
     plt.title('{} count for {}'.format(title, bamfile_basename))
     x_axis = range(len(counts))
     plt.bar(x_axis, counts)
-    output_filename = bamfile_basename + '.' + extension + '.png'
+    if args.dir is not None:
+        output_directory = args.dir
+        output_filename = output_directory + '/' + bamfile_basename + '.' + extension + '.png'
+    else:
+        output_filename = bamfile_basename + '.' + extension + '.png'
     plt.savefig(output_filename)
     plt.close()
 
